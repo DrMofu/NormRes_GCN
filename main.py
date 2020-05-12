@@ -46,24 +46,8 @@ x_mask_coo = x_adj_normed.tocoo()
 x_mask_indices = np.array([x_mask_coo.row, x_mask_coo.col]).transpose()
 
 # 转换为tf格式/神经网络可用的格式
-if args.attention:
-  x_mask = np.zeros(x_mask_coo.shape)
-  all_mask = np.zeros(all_mask_coo.shape)
-
-  for item in x_mask_indices:
-    x_mask[item[0],item[1]]=1
-
-  for item in all_mask_indices:
-    all_mask[item[0],item[1]]=1
-
-  x_mask = (1-x_mask)*-1e9
-  all_mask = (1-all_mask)*-1e9
-
-  x_adj_normed_sparse_tensor = x_mask
-  all_adj_normed_sparse_tensor = all_mask
-else:
-  x_adj_normed_sparse_tensor = convert_sparse_matrix_to_sparse_tensor(x_adj_normed)
-  all_adj_normed_sparse_tensor = convert_sparse_matrix_to_sparse_tensor(all_adj_normed)
+x_adj_normed_sparse_tensor = convert_sparse_matrix_to_sparse_tensor(x_adj_normed)
+all_adj_normed_sparse_tensor = convert_sparse_matrix_to_sparse_tensor(all_adj_normed)
 
 # # 评价测试
 # start_time = time.time()
@@ -74,16 +58,7 @@ else:
 # print(end_time)
 
 # 模型参数配置
-args.regularizer_scale = 1e-5
-args.layer_decay = 0.9
-args.dropout= 0
-args.random = False
-args.hidden_units = [2048,2048]
-args.num_layers = len(args.hidden_units)
-args.epochs = 600
-args.record_all = False
-args.log_name = 'my_res_0.9'
-args.train_noise = 0
+args.log_name = 'strandard'
 
 # 模型生成
 MyModel,optimizer,summary_writer = create_model(args)

@@ -147,17 +147,14 @@ def training_model(model,optimizer,summary_writer,
 
 def create_model(args):
   regularizer = tf.keras.regularizers.l2(args.regularizer_scale)
-  if args.attention:
-    model = ResidualGraphConvolutionalNetwork_Attention(args=args,regularizer=regularizer)
-  else:
-    model = ResidualGraphConvolutionalNetwork(args=args,regularizer=regularizer)
+  model = ResidualGraphConvolutionalNetwork(args=args,regularizer=regularizer)
   optimizer = tf.keras.optimizers.Adam(args.lr)
   if args.hparam_tuning:
     log_dir = os.path.join('logs','hparam_tuning',args.log_name)
   else:
     if args.pre_graph:
-      log_dir = os.path.join('logs',args.dataset,'pre_graph',args.log_name,str(args.num_layers))
+      log_dir = os.path.join('logs',args.dataset,'pre_graph',args.log_name,str(len(args.hidden_units)))
     else:
-      log_dir = os.path.join('logs',args.dataset,'standard',args.log_name,str(args.num_layers))
+      log_dir = os.path.join('logs',args.dataset,'standard',args.log_name,str(len(args.hidden_units)))
   summary_writer = tf.summary.create_file_writer(log_dir)
   return model,optimizer,summary_writer
